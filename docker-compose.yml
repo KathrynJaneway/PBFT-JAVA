@@ -1,0 +1,10 @@
+version: '2'
+services:
+  node-java:
+    extends:
+      file: docker-compose.node-java.yml
+      service: node
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      NODE_DEBUG: "False"
