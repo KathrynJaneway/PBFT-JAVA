@@ -53,11 +53,11 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <finalName>sparkexample</finalName>
+                    <finalName>pbft</finalName>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>sparkexample.Hello</mainClass>
+                            <mainClass>de.teamproject16.pbft.Main</mainClass>
                             <classpathPrefix>dependency-jars/</classpathPrefix>
                         </manifest>
                     </archive>
@@ -82,7 +82,7 @@
                         </goals>
                         <phase>package</phase>
                         <configuration>
-                            <finalName>teamproject</finalName>
+                            <finalName>pbft</finalName>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>

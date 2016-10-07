@@ -17,6 +17,6 @@ RUN ["mvn", "package"]
 
 EXPOSE 4458
 # CMD ["ls", "-la", "target/"]
-CMD ["/usr/lib/jvm/java-8-openjdk-amd64/bin/java", "-jar", "target/teamproject-jar-with-dependencies.jar"]
+CMD ["/usr/lib/jvm/java-8-openjdk-amd64/bin/java", "-jar", "target/pbft-jar-with-dependencies.jar"]
 
 
