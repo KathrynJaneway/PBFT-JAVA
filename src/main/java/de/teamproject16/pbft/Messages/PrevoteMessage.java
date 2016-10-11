@@ -12,6 +12,14 @@ public class PrevoteMessage extends Message {
     Number leader;
     Number value;
 
+    /**
+     * Prevote message
+     * @param type messagetype
+     * @param sequence_no of tries
+     * @param node the id of the sender
+     * @param leader
+     * @param value from the node
+     */
     public PrevoteMessage(Number type, Number sequence_no, Number node, Number leader, Number value) {
         super(type, sequence_no);
         this.node = node;
@@ -19,11 +27,22 @@ public class PrevoteMessage extends Message {
         this.value = value;
     }
 
+    /**
+     * Create a prevote message object from the data out JSONObject.
+     * @param data JSONObject
+     * @return a new prevote message object with the specific data.
+     * @throws JSONException
+     */
     public static PrevoteMessage messageDecipher(JSONObject data) throws JSONException {
         return new PrevoteMessage((Number) data.get("type"), (Number) data.get("sequence_no"), (Number) data.get("node"),
                 (Number) data.get("leader"), (Number) data.get("value"));
     }
 
+    /**
+     * Create JSONObject for the network.
+     * @return data JSONObject
+     * @throws JSONException
+     */
     public JSONObject messageEncode() throws JSONException {
         JSONObject data = super.messageEncode();
         data.put("node", this.node);

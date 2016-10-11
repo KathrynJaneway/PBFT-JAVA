@@ -8,6 +8,9 @@ import org.json.JSONObject;
  */
 public class Message {
 
+    /**
+     * Enum class for the messagetyps.
+     */
     public enum messageType {
         INIT, LEADER_CHANGE, PROPOSE, PREVOTE, VOTE
     }
@@ -15,12 +18,20 @@ public class Message {
     static Number type;
     Number sequence_no;
 
+    /**
+     * Create the basic type of message.
+     * @param type messagetype
+     * @param sequence_no of tries
+     */
     public Message(Number type, Number sequence_no){
         this.type = type;
         this.sequence_no = sequence_no;
     }
 
-
+    /**
+     *
+     * @return String with basic data from this message.
+     */
     public String toString(){
         try {
             return this.messageEncode().toString();
@@ -30,6 +41,11 @@ public class Message {
         }
     }
 
+    /**
+     * Encode the basic data for the network.
+     * @return JSONObject data
+     * @throws JSONException
+     */
     public JSONObject messageEncode () throws JSONException {
         JSONObject data = new JSONObject();
         data.put("type", this.type);
@@ -37,6 +53,12 @@ public class Message {
         return data;
     }
 
+    /**
+     * Create a specific message from the received message.
+     * @param data received message
+     * @return specific message object
+     * @throws JSONException
+     */
     public static Message messageConvert(JSONObject data) throws JSONException {
         try {
             type = Integer.parseInt(data.getString("type"));

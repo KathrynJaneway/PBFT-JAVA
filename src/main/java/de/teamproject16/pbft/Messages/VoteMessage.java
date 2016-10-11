@@ -12,6 +12,14 @@ public class VoteMessage extends Message {
     Number leader;
     Number value;
 
+    /**
+     * Vote message
+     * @param type messagetype
+     * @param sequence_no of tries
+     * @param node the id of the sender
+     * @param leader
+     * @param value of the sensor
+     */
     public VoteMessage(Number type, Number sequence_no, Number node, Number leader, Number value) {
         super(type, sequence_no);
         this.node = node;
@@ -19,11 +27,22 @@ public class VoteMessage extends Message {
         this.value = value;
     }
 
+    /**
+     * Create a vote message object from the data out JSONObject.
+     * @param data JSONObject
+     * @return a new vote message object with the specific data.
+     * @throws JSONException
+     */
     public static VoteMessage messageDecipher(JSONObject data) throws JSONException {
         return new VoteMessage((Number) data.get("type"), (Number) data.get("sequence_no"), (Number) data.get("node"),
                 (Number) data.get("leader"), (Number) data.get("value"));
     }
 
+    /**
+     * Create JSONObject for the network.
+     * @return data JSONObject
+     * @throws JSONException
+     */
     public JSONObject messageEncode() throws JSONException {
         JSONObject data = super.messageEncode();
         data.put("node", this.node);
