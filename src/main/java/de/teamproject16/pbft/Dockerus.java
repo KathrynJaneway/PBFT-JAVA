@@ -95,7 +95,7 @@ public class Dockerus {
         ).stream().filter(c -> !excludeSelf || this.filterIsIdEqualHostname(c)).collect(Collectors.toList());
     }
 
-    String getHostname() throws DockerException, InterruptedException {
+    public String getHostname() throws DockerException, InterruptedException {
         return this.getHostname(this.me());
     }
     String getHostname(Container container) throws DockerException, InterruptedException {
