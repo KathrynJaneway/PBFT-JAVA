@@ -21,72 +21,78 @@ public class Receiver extends ObjectWithLogger {
 
     public void receiver() throws IOException, DockerException, InterruptedException {
         ServerSocket server = new ServerSocket(4458);
-        Socket socket = server.accept();
-        // Socket socket = new Socket();
-        // socket.bind(new InetSocketAddress(DockerusAuto.getInstance().getHostname(), 4458));
-        BufferedInputStream input = new BufferedInputStream(socket.getInputStream());
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // byte buffer[] = new byte[520];
+        while (true) {// For each connection do:   // TODO: self.do_quit or similar
+            Socket socket = server.accept();
+            try {
+                // Socket socket = new Socket();
+                // socket.bind(new InetSocketAddress(DockerusAuto.getInstance().getHostname(), 4458));
+                BufferedInputStream input = new BufferedInputStream(socket.getInputStream());
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                // byte buffer[] = new byte[520];
 
-        int completed = -ANSWER_SYNTAX.length(); // when 0 => Number starts
-        // -7 = ^ANSWER 123\n
-        // -6 = A^NSWER 123\n
-        // etc..
-        // -1 = ANSWER^ 123\n
-        // 0 = ANSWER ^123\n //ready to read the number
-        ByteBuffer buff = ByteBuffer.allocate(520);
-        // buff.put(ANSWER_SYNTAX.getBytes()); // TODO: Unit test :D
-        while (true) { //TODO: not do that :D
-            long length_of_answer = -1;
-            while (length_of_answer == -1) {  // Length detection: "ANSWER 123\n"
-                int char_ = input.read();
-                if(char_ == -1){
-                    //TODO: Close connection; connect to next incoming client.
-                    throw new NotImplementedException("-1");
-                }
-                int calc = ANSWER_SYNTAX.length() + completed;  // gets the index we should have in ANS
-                System.out.println("char: " + (char)char_ + " | completed: " + completed + " | length: " + ANSWER_SYNTAX.length() + " | calc: " + calc);
-                if (completed < 0) {
-                    // must be inside ANSWER_SYNTAX
-                    if ((char) char_ != ANSWER_SYNTAX.charAt(ANSWER_SYNTAX.length() + completed)) { // if the received character is wrong
-                        //TODO: If wrong ANSWER_SYNTAX: Close (abort) connection; connect to next incoming client.
-                        throw new NotImplementedException("!= ANSWER");
+                int completed = -ANSWER_SYNTAX.length(); // when 0 => Number starts
+                // -7 = ^ANSWER 123\n
+                // -6 = A^NSWER 123\n
+                // etc..
+                // -1 = ANSWER^ 123\n
+                // 0 = ANSWER ^123\n //ready to read the number
+                ByteBuffer buff = null;
+                // buff.put(ANSWER_SYNTAX.getBytes()); // TODO: Unit test :D
+                long length_of_answer = -1;
+                buff = ByteBuffer.allocate(520);  // ANSWER <int>\n
+                while (length_of_answer == -1) {  // Length detection: "ANSWER 123\n"
+                    int char_ = input.read();
+                    if (char_ == -1) {
+                        //TODO: Close connection; connect to next incoming client.
+                        throw new CloseConnectionPlease("Client disconnected.");
                     }
-                    completed ++;
-                } else {
-                    if ((char) char_ != '\n') {  // not end yet. // line breaks in json strings should be "\\" and "n".
-                        // put it into our number buffer.
-                        buff.put((byte) char_);
-                    } else { // end of ANSWER_SYNTAX+number+\n, after number
-                        // linebreak: we have the ending.
-                        // http://stackoverflow.com/a/22717246
-                        byte[] str_bytes = new byte[buff.position()];
-                        buff.rewind();
-                        buff.get(str_bytes);
-                        String str = new String(str_bytes, Charset.forName("UTF-8"));  // http://stackoverflow.com/a/17355227
-                        this.getLogger().warning("Did Read: " + buff + "> " + str);
-                        length_of_answer = Integer.parseInt(str);
-                        break;  // (if should do that anyway)
+                    if (completed < 0) {
+                        // must be inside ANSWER_SYNTAX
+                        if ((char) char_ != ANSWER_SYNTAX.charAt(ANSWER_SYNTAX.length() + completed)) { // if the received character is wrong
+                            //TODO: If wrong ANSWER_SYNTAX: Close (abort) connection; connect to next incoming client.
+                            throw new CloseConnectionPlease("!= ANSWER");
+                        }
+                        completed++;
+                    } else {
+                        if ((char) char_ != '\n') {  // not end yet. // line breaks in json strings should be "\\" and "n".
+                            // put it into our number buffer.
+                            buff.put((byte) char_);
+                        } else { // end of ANSWER_SYNTAX+number+\n, after number
+                            // linebreak: we have the ending.
+                            // http://stackoverflow.com/a/22717246
+                            byte[] str_bytes = new byte[buff.position()];
+                            buff.rewind();
+                            buff.get(str_bytes);
+                            String str = new String(str_bytes, Charset.forName("UTF-8"));  // http://stackoverflow.com/a/17355227
+                            this.getLogger().warning("Did Read: " + buff + "> " + str);
+                            length_of_answer = Integer.parseInt(str);
+                            break;  // (if should do that anyway)
+                        }
                     }
                 }
-            }
-            this.getLogger().finest("Waiting to receive " + length_of_answer + " bytes.");
-            //prepare content reading
-            buff = ByteBuffer.allocate((int) length_of_answer);
-            int bytes_read = 0;
-            while (bytes_read < length_of_answer) {
-                int char_ = input.read();
-                if (char_ == -1) {
-                    //TODO: close socket, retry and stuff
-                    throw new NotImplementedException("-1");
+                this.getLogger().finest("Waiting to receive " + length_of_answer + " bytes.");
+                //prepare content reading
+                buff = ByteBuffer.allocate((int) length_of_answer);
+                int bytes_read = 0;
+                while (bytes_read < length_of_answer) {
+                    int char_ = input.read();
+                    if (char_ == -1) {
+                        //TODO: close socket, retry and stuff
+                        throw new CloseConnectionPlease("Client disconnected.");
+                    }
+                    bytes_read++;
+                    buff.put((byte) char_);
+                    //TODO: last char should be '\n'
                 }
-                bytes_read++;
-                buff.put((byte)char_);
-                //TODO: last char should be '\n'
+                String result = new String(buff.array(), Charset.forName("UTF-8"));
+                this.getLogger().warning("Received: " + result);
+                this.addMessage(result);
+                // TODO: next read = closed socket
+            } catch (CloseConnectionPlease e) {
+                this.getLogger().finest("Requested to close connection prematurely: " + e.getLocalizedMessage());
+            } finally {
+                socket.close();
             }
-            String result = buff.asCharBuffer().toString();
-            this.getLogger().warning("Received: " + result);
-            this.addMessage(result);
         }
 
         //byte result[] = baos.toByteArray();
