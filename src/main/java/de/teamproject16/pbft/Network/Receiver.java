@@ -1,8 +1,7 @@
 package de.teamproject16.pbft.Network;
 
-import com.spotify.docker.client.DockerCertificateException;
 import com.spotify.docker.client.DockerException;
-import de.teamproject16.pbft.Dockerus;
+import de.luckydonald.utils.dockerus.DockerusAuto;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,8 +16,8 @@ public class Receiver {
     private static String ANSWER_SYNTAX = "ANSWER ";
     private static byte LINE_BREAK = '\n';
 
-    public static void receiver() throws IOException, DockerCertificateException, DockerException, InterruptedException {
-        Socket socket = new Socket(Dockerus.getInstance().getHostname(), 4458);
+    public static void receiver() throws IOException, DockerException, InterruptedException {
+        Socket socket = new Socket(DockerusAuto.getInstance().getHostname(), 4458);
         BufferedInputStream input = new BufferedInputStream(socket.getInputStream());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte buffer[] = new byte[520];

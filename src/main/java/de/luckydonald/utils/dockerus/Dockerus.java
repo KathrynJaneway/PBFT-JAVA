@@ -1,4 +1,4 @@
-package de.teamproject16.pbft;
+package de.luckydonald.utils.dockerus;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerCertificateException;
@@ -33,7 +33,7 @@ public class Dockerus {
         return Dockerus.instance;
     }
 
-    private Dockerus() throws DockerCertificateException {
+    Dockerus() throws DockerCertificateException {
         // Create a client based on DOCKER_HOST and DOCKER_CERT_PATH env vars
         docker = DefaultDockerClient.fromEnv().build();
         // docker.listContainers(DockerClient.ListContainersParam.withLabel(""))
@@ -75,9 +75,7 @@ public class Dockerus {
         return this.getProject(this.me());
     }
     String getProject(Container container) throws DockerException, InterruptedException {
-        System.out.print(container.labels());
         return container.labels().get(this.LABEL_COMPOSE_PROJECT);
-
     }
 
 

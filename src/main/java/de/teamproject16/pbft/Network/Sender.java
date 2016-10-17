@@ -2,7 +2,7 @@ package de.teamproject16.pbft.Network;
 
 import com.spotify.docker.client.DockerCertificateException;
 import com.spotify.docker.client.DockerException;
-import de.teamproject16.pbft.Dockerus;
+import de.luckydonald.utils.dockerus.DockerusAuto;
 import de.teamproject16.pbft.Messages.Message;
 
 import java.io.DataOutputStream;
@@ -39,7 +39,7 @@ public class Sender {
      * @throws InterruptedException
      */
     public void broadcast(String message) throws UnsupportedEncodingException, DockerCertificateException, DockerException, InterruptedException {
-        List<String> otherHostnames = Dockerus.getInstance().getHostnames(true);
+        List<String> otherHostnames = DockerusAuto.getInstance().getHostnames(true);
         message += "\n";
         msg = "ANSWER " + message.length() + "\n" + message;
         byte[] msgBytes = msg.getBytes("UTF-8");
