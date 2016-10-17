@@ -4,7 +4,7 @@ import com.spotify.docker.client.DockerCertificateException;
 import com.spotify.docker.client.DockerException;
 
 /**
- * Created by IngridBoldt on 17.10.16.
+ * Created by luckydonald on 17.10.16.
  */
 public class DockerusAuto extends Dockerus {
     DockerusAuto() throws DockerCertificateException {

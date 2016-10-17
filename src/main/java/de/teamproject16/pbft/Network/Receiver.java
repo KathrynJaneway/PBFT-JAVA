@@ -1,56 +1,60 @@
 package de.teamproject16.pbft.Network;
 
-import com.spotify.docker.client.DockerException;
 import de.luckydonald.utils.ObjectWithLogger;
-import org.apache.commons.lang.NotImplementedException;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-/**
- * Created by IngridBoldt on 06.10.16.
+/* Test with netcat in terminal:
+ * $ nc localhost 4458
+ * ANSWER 19
+ * {"hello": "world"}
  */
+
+
+/**
+ * Class to which will receive Messages.
+ * It will call {@link Receiver#addMessage(String) this.addMessage(String messageContent)} to process incoming messages.
+ **/
 public class Receiver extends ObjectWithLogger {
     private static String ANSWER_SYNTAX = "ANSWER ";
     private static byte LINE_BREAK = '\n';
 
-    public void receiver() throws IOException, DockerException, InterruptedException {
-        ServerSocket server = new ServerSocket(4458);
-        while (true) {// For each connection do:   // TODO: self.do_quit or similar
-            Socket socket = server.accept();
+    public void receiver() throws IOException {
+        ServerSocket server = new ServerSocket(4458); // throws IOException
+        while (true) {  // For each connection do  // TODO: self.do_quit or similar
+            Socket socket = server.accept();  // throws IOException
             try {
-                // Socket socket = new Socket();
-                // socket.bind(new InetSocketAddress(DockerusAuto.getInstance().getHostname(), 4458));
-                BufferedInputStream input = new BufferedInputStream(socket.getInputStream());
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                // byte buffer[] = new byte[520];
+                BufferedInputStream input = new BufferedInputStream(socket.getInputStream()); // throws IOException
 
-                int completed = -ANSWER_SYNTAX.length(); // when 0 => Number starts
-                // -7 = ^ANSWER 123\n
-                // -6 = A^NSWER 123\n
-                // etc..
-                // -1 = ANSWER^ 123\n
-                // 0 = ANSWER ^123\n //ready to read the number
+                int completed = -ANSWER_SYNTAX.length();
+                /**
+                 -7 = ^ANSWER 123\n
+                 -6 = A^NSWER 123\n
+                 -1 = ANSWER^ 123\n
+                 0 = ANSWER ^123\n  => ready to read the number
+                 **/
+
                 ByteBuffer buff = null;
                 // buff.put(ANSWER_SYNTAX.getBytes()); // TODO: Unit test :D
                 long length_of_answer = -1;
                 buff = ByteBuffer.allocate(520);  // ANSWER <int>\n
                 while (length_of_answer == -1) {  // Length detection: "ANSWER 123\n"
-                    int char_ = input.read();
+                    int char_ = input.read();  // throws IOException
                     if (char_ == -1) {
-                        //TODO: Close connection; connect to next incoming client.
+                        // Client disconnected prematurely: Close connection; connect to next incoming client.
                         throw new CloseConnectionPlease("Client disconnected.");
                     }
                     if (completed < 0) {
                         // must be inside ANSWER_SYNTAX
-                        if ((char) char_ != ANSWER_SYNTAX.charAt(ANSWER_SYNTAX.length() + completed)) { // if the received character is wrong
-                            //TODO: If wrong ANSWER_SYNTAX: Close (abort) connection; connect to next incoming client.
-                            throw new CloseConnectionPlease("!= ANSWER");
+                        if ((char) char_ != ANSWER_SYNTAX.charAt(ANSWER_SYNTAX.length() + completed)) {
+                            // if the received character not as expected of the ANSWER_SYNTAX header.
+                            //Wrong ANSWER_SYNTAX => Close (abort) connection; connect to next incoming client.
+                            throw new CloseConnectionPlease("Syntax error in ANSWER header.");
                         }
                         completed++;
                     } else {
@@ -63,100 +67,60 @@ public class Receiver extends ObjectWithLogger {
                             byte[] str_bytes = new byte[buff.position()];
                             buff.rewind();
                             buff.get(str_bytes);
-                            String str = new String(str_bytes, Charset.forName("UTF-8"));  // http://stackoverflow.com/a/17355227
+                            // http://stackoverflow.com/a/17355227
+                            String str = new String(str_bytes, Charset.forName("UTF-8"));
                             this.getLogger().warning("Did Read: " + buff + "> " + str);
                             length_of_answer = Integer.parseInt(str);
-                            break;  // (if should do that anyway)
+                            break;  // (while should end anyway)
                         }
                     }
                 }
+                // prepare content reading
                 this.getLogger().finest("Waiting to receive " + length_of_answer + " bytes.");
-                //prepare content reading
                 buff = ByteBuffer.allocate((int) length_of_answer);
                 int bytes_read = 0;
                 while (bytes_read < length_of_answer) {
-                    int char_ = input.read();
+                    int char_ = input.read();  // throws IOException
                     if (char_ == -1) {
-                        //TODO: close socket, retry and stuff
+                        // Client disconnected prematurely: Close connection; connect to next incoming client.
                         throw new CloseConnectionPlease("Client disconnected.");
+                    }
+                    if (bytes_read+1 != length_of_answer) {
+                        if (char_ == '\n') {
+                            // last char should be '\n'
+                            getLogger().finest("Skipping ending linebreak.");
+                        } else {
+                            getLogger().warning("Message did not end with '\\n', ignoring!");
+                            throw new CloseConnectionPlease("Not ending with '\\n'");
+                        }
                     }
                     bytes_read++;
                     buff.put((byte) char_);
-                    //TODO: last char should be '\n'
                 }
                 String result = new String(buff.array(), Charset.forName("UTF-8"));
                 this.getLogger().warning("Received: " + result);
                 this.addMessage(result);
-                // TODO: next read = closed socket
+                // now the client would close the sockets. We do, too, in the finally statement
             } catch (CloseConnectionPlease e) {
                 this.getLogger().finest("Requested to close connection prematurely: " + e.getLocalizedMessage());
+            } catch (IOException e){
+                this.getLogger().warning("IOException");
+                e.printStackTrace();
             } finally {
-                socket.close();
+                // in case it should close prematurely (by throwing CloseConnectionPlease)
+                // in case of normal operation after a received message.
+                try {
+                    socket.close();  // throws IOException
+                } catch (IOException e) {
+                    this.getLogger().warning("Ignored failed socket closing.");
+                }
             }
         }
-
-        //byte result[] = baos.toByteArray();
-
     }
+
     private void addMessage(String json) {
         //TODO: string to json
         //TODO: json to Message instance
-        //TODO: put message in a list
+        //TODO: put message in the fitting list
     }
 }
-// {"hello": "world"}
-//18+\n = 19
-
-/**        Boolean do_quit = false;
-
-        while (!do_quit){
-            new ServerSocket(4456);
-            Socket socket = new Socket();
-            InetSocketAddress addr = new InetSocketAddress(Dockerus.getInstance().getHostname(), 4458);
-            socket.bind(addr);
-            socket.setSoTimeout(60000);
-            byte answer = EMPTY_RAW_BYTE;
-            int completed = -1;
-            while ((!do_quit) && socket.isClosed()){
-                byte[] buffer = new byte[520];
-                InputStream rein = socket.getInputStream();
-                BufferedReader b = new BufferedReader(new InputStreamReader(rein));
-                System.out.println("Hallo receiver. " + rein.available());
-
-                socket.getInputStream().read(buffer);
-                String text = null;
-                if (buffer.length == 0){
-                    socket.close();
-                }
-                if (completed == 0){
-                    if (answer != LINE_BREAK){
-                        System.out.println("Error Receiver");
-                        break;
-                    }
-                    if (buffer[0] == EMPTY_RAW_BYTE){
-                        completed -= 1;
-                        continue;
-                    }
-                    text = buffer.toString();
-                    if (text.length() > 0 && text.equals("")){
-                        addMessage(text);
-                    }
-                    answer = EMPTY_RAW_BYTE;
-                    buffer = null;
-                    continue;
-                }
-                if (completed < -1 && buffer.length != ANSWER_SYNTAX.length()){
-                    throw new IOException();
-                }
-                if (completed <= -1 && text.startsWith(ANSWER_SYNTAX) && text.endsWith(String.valueOf(LINE_BREAK))){
-                    completed = text.length() - ANSWER_SYNTAX.length() - 1;// -1 wegen Zeilenumbruch
-                    buffer = null;
-                }
-            }
-        }
-    }
-
-    public static Object addMessage(String text){
-        return null;
-    }**/
-
