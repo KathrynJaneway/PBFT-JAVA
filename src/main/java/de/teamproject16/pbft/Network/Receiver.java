@@ -1,6 +1,8 @@
 package de.teamproject16.pbft.Network;
 
 import com.spotify.docker.client.DockerException;
+import de.luckydonald.utils.ObjectWithLogger;
+import org.apache.commons.lang.NotImplementedException;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,11 +10,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 /**
  * Created by IngridBoldt on 06.10.16.
  */
-public class Receiver {
+public class Receiver extends ObjectWithLogger {
     private static String ANSWER_SYNTAX = "ANSWER ";
     private static byte LINE_BREAK = '\n';
 
@@ -32,18 +35,22 @@ public class Receiver {
         // -1 = ANSWER^ 123\n
         // 0 = ANSWER ^123\n //ready to read the number
         ByteBuffer buff = ByteBuffer.allocate(520);
-        buff.put(ANSWER_SYNTAX.getBytes()); // TODO: Unit test :D
+        // buff.put(ANSWER_SYNTAX.getBytes()); // TODO: Unit test :D
         while (true) { //TODO: not do that :D
-            int length_of_answer = -1;
+            long length_of_answer = -1;
             while (length_of_answer == -1) {  // Length detection: "ANSWER 123\n"
                 int char_ = input.read();
                 if(char_ == -1){
                     //TODO: Close connection; connect to next incoming client.
+                    throw new NotImplementedException("-1");
                 }
+                int calc = ANSWER_SYNTAX.length() + completed;  // gets the index we should have in ANS
+                System.out.println("char: " + (char)char_ + " | completed: " + completed + " | length: " + ANSWER_SYNTAX.length() + " | calc: " + calc);
                 if (completed < 0) {
                     // must be inside ANSWER_SYNTAX
-                    if ((char) char_ != ANSWER_SYNTAX.charAt(ANSWER_SYNTAX.length() + completed - 1)) { // if the received character is wrong
+                    if ((char) char_ != ANSWER_SYNTAX.charAt(ANSWER_SYNTAX.length() + completed)) { // if the received character is wrong
                         //TODO: If wrong ANSWER_SYNTAX: Close (abort) connection; connect to next incoming client.
+                        throw new NotImplementedException("!= ANSWER");
                     }
                     completed ++;
                 } else {
@@ -52,24 +59,33 @@ public class Receiver {
                         buff.put((byte) char_);
                     } else { // end of ANSWER_SYNTAX+number+\n, after number
                         // linebreak: we have the ending.
-                        length_of_answer = buff.getInt();
+                        // http://stackoverflow.com/a/22717246
+                        byte[] str_bytes = new byte[buff.position()];
+                        buff.rewind();
+                        buff.get(str_bytes);
+                        String str = new String(str_bytes, Charset.forName("UTF-8"));  // http://stackoverflow.com/a/17355227
+                        this.getLogger().warning("Did Read: " + buff + "> " + str);
+                        length_of_answer = Integer.parseInt(str);
                         break;  // (if should do that anyway)
                     }
                 }
             }
+            this.getLogger().finest("Waiting to receive " + length_of_answer + " bytes.");
             //prepare content reading
-            buff = ByteBuffer.allocate(length_of_answer);
+            buff = ByteBuffer.allocate((int) length_of_answer);
             int bytes_read = 0;
             while (bytes_read < length_of_answer) {
                 int char_ = input.read();
                 if (char_ == -1) {
                     //TODO: close socket, retry and stuff
+                    throw new NotImplementedException("-1");
                 }
                 bytes_read++;
                 buff.put((byte)char_);
                 //TODO: last char should be '\n'
             }
             String result = buff.asCharBuffer().toString();
+            this.getLogger().warning("Received: " + result);
             this.addMessage(result);
         }
 
@@ -81,38 +97,9 @@ public class Receiver {
         //TODO: json to Message instance
         //TODO: put message in a list
     }
-    static void lol() {
-        int completed = -ANSWER_SYNTAX.length(); // when 0 => Number starts
-        // -7 = ^ANSWER 123\n
-        // -6 = A^NSWER 123\n
-        // etc..
-        // -1 = ANSWER^ 123\n
-        // 0 = ANSWER ^123\n //ready to read the number
-        ByteBuffer buff = ByteBuffer.allocate(520);
-        buff.put(ANSWER_SYNTAX.getBytes()); // TODO: Unit test :D
-        int fake_i = 0;
-        while (true) { //TODO: not do that :D
-            //int char_ = input.get(fake_i++); //.read();
-            int char_ = buff.get(fake_i++); //.read();
-            completed++;
-            if (char_ == -1) {
-                //TODO: Close connection; connect to next incoming client.
-            }
-            int calc = ANSWER_SYNTAX.length() + completed - 1;  // gets the index we should have in ANS
-            System.out.println("char: " + (char)char_ + " | completed: " + completed + " | length: " + ANSWER_SYNTAX.length() + " | calc: " + calc);
-            if (completed < 0) {
-                // must be inside ANSWER_SYNTAX
-                if ((char) char_ != ANSWER_SYNTAX.charAt(calc)) { // if the received character is wrong
-                    //TODO: If wrong ANSWER_SYNTAX: Close (abort) connection; connect to next incoming client.
-                    // -6 = A^NSWER 123\n
-                    //  7+-6 = 1 => "ANSWER "[1] => "N"
-
-                }
-
-            }
-        }
-    }
 }
+// {"hello": "world"}
+//18+\n = 19
 
 /**        Boolean do_quit = false;
 
