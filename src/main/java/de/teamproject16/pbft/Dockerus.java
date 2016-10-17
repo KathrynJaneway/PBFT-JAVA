@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class Dockerus {
     String LABEL_COMPOSE_CONTAINER_NUMBER = "com.docker.compose.container-number";
     String LABEL_COMPOSE_PROJECT = "com.docker.compose.project";
-    String LABEL_COMPOSE_SERVICE = "com.docker.compose.getService";
+    String LABEL_COMPOSE_SERVICE = "com.docker.compose.service";
 
     final DockerClient docker;
 
@@ -75,7 +75,9 @@ public class Dockerus {
         return this.getProject(this.me());
     }
     String getProject(Container container) throws DockerException, InterruptedException {
+        System.out.print(container.labels());
         return container.labels().get(this.LABEL_COMPOSE_PROJECT);
+
     }
 
 
