@@ -1,7 +1,6 @@
 package de.teamproject16.pbft.Network;
 
 import com.spotify.docker.client.DockerException;
-import org.apache.commons.lang.NotImplementedException;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,12 +13,10 @@ import java.nio.ByteBuffer;
  * Created by IngridBoldt on 06.10.16.
  */
 public class Receiver {
-    private static byte EMPTY_RAW_BYTE = ' ';
     private static String ANSWER_SYNTAX = "ANSWER ";
     private static byte LINE_BREAK = '\n';
 
-    public static void receiver() throws IOException, DockerException, InterruptedException {
-        lol();
+    public void receiver() throws IOException, DockerException, InterruptedException {
         ServerSocket server = new ServerSocket(4458);
         Socket socket = server.accept();
         // Socket socket = new Socket();
@@ -62,33 +59,27 @@ public class Receiver {
             }
             //prepare content reading
             buff = ByteBuffer.allocate(length_of_answer);
-            int read_bytes = input.read(buff.array());  // TODO: Does that *REALLY* read all bytes?!?
-            if (read_bytes != length_of_answer) {
-                if (read_bytes == -1) {
+            int bytes_read = 0;
+            while (bytes_read < length_of_answer) {
+                int char_ = input.read();
+                if (char_ == -1) {
                     //TODO: close socket, retry and stuff
-                } else {
-                    //TODO: incomplete read
-                    throw new NotImplementedException("AAaooouasdfsd (incomplete read)");
                 }
+                bytes_read++;
+                buff.put((byte)char_);
+                //TODO: last char should be '\n'
             }
-            //DOCUMENTATION OF ByteBuffer.array():
-            // Modifications to this buffer's content will cause the returned array's content to be modified,
-            // and vice versa.
-            for (int i = length_of_answer; i < 0; i--) {
-
-            }
-
-
-
-            //if completed;
-            buff.put((byte) char_);
-
-            //buff.getCha
-
+            String result = buff.asCharBuffer().toString();
+            this.addMessage(result);
         }
 
         //byte result[] = baos.toByteArray();
 
+    }
+    private void addMessage(String json) {
+        //TODO: string to json
+        //TODO: json to Message instance
+        //TODO: put message in a list
     }
     static void lol() {
         int completed = -ANSWER_SYNTAX.length(); // when 0 => Number starts

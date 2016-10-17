@@ -12,8 +12,8 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, DockerException, DockerCertificateException {
         System.out.println("HalloMain");
-
-            Receiver.receiver();
+        Receiver receiver = new Receiver();
+        receiver.receiver();
 
     }
 }
