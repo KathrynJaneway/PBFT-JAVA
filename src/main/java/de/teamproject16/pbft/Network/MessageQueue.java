@@ -15,46 +15,26 @@ public class MessageQueue {
     static LinkedBlockingQueue voteM = new LinkedBlockingQueue();
 
     public static void messageQueue(Message message){
-        if (message instanceof InitMessage){
-            try {
+        try {
+            if (message instanceof InitMessage){
                 initM.put(message);
-            } catch (InterruptedException e) {
-                System.out.println("Message can't put in the queue (InitMessage).");
-                e.printStackTrace();
             }
-        }
-        if (message instanceof LeaderChangeMessage){
-            try {
+            if (message instanceof LeaderChangeMessage) {
                 leaderChangeM.put(message);
-            } catch (InterruptedException e) {
-                System.out.println("Message can't put in the queue (LeaderChangeMessage).");
-                e.printStackTrace();
             }
-        }
-        if (message instanceof PrevoteMessage){
-            try {
+            if (message instanceof PrevoteMessage) {
                 prevoteM.put(message);
-            } catch (InterruptedException e) {
-                System.out.println("Message can't put in the queue (PrevoteMessage).");
-                e.printStackTrace();
             }
-        }
-        if (message instanceof ProposeMessage){
-            try {
+            if (message instanceof ProposeMessage){
                 proposeM.put(message);
-            } catch (InterruptedException e) {
-                System.out.println("Message can't put in the queue (ProposeMessage).");
-                e.printStackTrace();
             }
-        }
-        if (message instanceof VoteMessage){
-            try {
+            if (message instanceof VoteMessage){
                 voteM.put(message);
-            } catch (InterruptedException e) {
-                System.out.println("Message can't put in the queue (VoteMessage).");
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
-
 }
+
+
