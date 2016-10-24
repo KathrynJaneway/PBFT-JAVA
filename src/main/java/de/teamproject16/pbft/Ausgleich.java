@@ -6,8 +6,6 @@ import java.util.*;
  * Created by IngridBoldt on 29.09.16.
  */
 public class Ausgleich {
-
-
     static ArrayList value = new ArrayList();
 
     public static Object calculateMedian() {

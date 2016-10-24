@@ -1,6 +1,6 @@
 version: '2'
 services:
-  node-java:
+  node_java:
     extends:
       file: docker-compose.node-java.yml
       service: node

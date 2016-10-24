@@ -1,4 +1,4 @@
-package de.teamproject16.pbft;
+package de.luckydonald.utils.dockerus;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerCertificateException;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class Dockerus {
     String LABEL_COMPOSE_CONTAINER_NUMBER = "com.docker.compose.container-number";
     String LABEL_COMPOSE_PROJECT = "com.docker.compose.project";
-    String LABEL_COMPOSE_SERVICE = "com.docker.compose.getService";
+    String LABEL_COMPOSE_SERVICE = "com.docker.compose.service";
 
     final DockerClient docker;
 
@@ -34,7 +34,7 @@ public class Dockerus {
         return Dockerus.instance;
     }
 
-    private Dockerus() throws DockerCertificateException {
+    Dockerus() throws DockerCertificateException {
         // Create a client based on DOCKER_HOST and DOCKER_CERT_PATH env vars
         docker = DefaultDockerClient.fromEnv().build();
         // docker.listContainers(DockerClient.ListContainersParam.withLabel(""))
@@ -97,7 +97,7 @@ public class Dockerus {
     }
 
     @CacheResult
-    String getHostname() throws DockerException, InterruptedException {
+    public String getHostname() throws DockerException, InterruptedException {
         return this.getHostname(this.me());
     }
 
