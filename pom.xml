@@ -44,6 +44,14 @@
             <version>master-SNAPSHOT</version>
         </dependency>
 
+        <!-- http://gregluck.com/blog/archives/2011/10/javax-cache-the-new-java-caching-standard/ -->
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>0.3</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

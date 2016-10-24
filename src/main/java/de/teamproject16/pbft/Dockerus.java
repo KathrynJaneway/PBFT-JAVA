@@ -7,6 +7,7 @@ import com.spotify.docker.client.DockerException;
 import com.spotify.docker.client.messages.Container;
 
 
+import javax.cache.annotation.CacheResult;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,13 +96,17 @@ public class Dockerus {
         ).stream().filter(c -> !excludeSelf || this.filterIsIdEqualHostname(c)).collect(Collectors.toList());
     }
 
+    @CacheResult
     String getHostname() throws DockerException, InterruptedException {
         return this.getHostname(this.me());
     }
+
+    @CacheResult
     String getHostname(Container container) throws DockerException, InterruptedException {
         return "" + this.getProject(container) + "_" + this.getService(container) + "_" + this.getNumber(container);
     }
 
+    @CacheResult
     public List<String> getHostnames(Boolean excludeSelf) throws DockerException, InterruptedException {
         return this.getContainers(excludeSelf).stream().map(c -> { try { return this.getHostname(c); } catch (InterruptedException | DockerException e) { e.printStackTrace(); return null; } }).filter(c -> c != null).collect(Collectors.toList());
         // #java_sucks  http://stackoverflow.com/a/19757456/3423324
