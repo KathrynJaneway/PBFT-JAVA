@@ -60,20 +60,20 @@ public class Message {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (MessageType.INIT == type){
+        if (Types.INIT == type){
             return InitMessage.messageDecipher(data);
         }
 
-        if (MessageType.LEADER_CHANGE == type){
+        if (Types.LEADER_CHANGE == type){
             return LeaderChangeMessage.messageDecipher(data);
         }
-        if (MessageType.PROPOSE == type){
+        if (Types.PROPOSE == type){
             return ProposeMessage.messageDecipher(data);
         }
-        if (MessageType.PREVOTE == type){
+        if (Types.PREVOTE == type){
             return PrevoteMessage.messageDecipher(data);
         }
-        if (MessageType.VOTE == type){
+        if (Types.VOTE == type){
             return VoteMessage.messageDecipher(data);
         }
         return new Message(data.getInt("type"), (Number) data.get("sequence_no"));

@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import static de.teamproject16.pbft.Messages.Types.PROPOSE;
+
 
 /**
  * Created by IngridBoldt on 29.09.16.
@@ -17,15 +19,14 @@ public class ProposeMessage extends Message {
 
     /**
      * Propose message
-     * @param type messagetype
      * @param sequence_no of tries
      * @param node the id of the sender
      * @param leader
      * @param proposal
      * @param value_store values from all nodes in the network
      */
-    public ProposeMessage(int type, Number sequence_no, Number node, Number leader, Number proposal, ArrayList value_store) {
-        super(type, sequence_no);
+    public ProposeMessage(Number sequence_no, Number node, Number leader, Number proposal, ArrayList value_store) {
+        super(PROPOSE, sequence_no);
         this.node = node;
         this.leader = leader;
         this.proposal = proposal;
@@ -39,7 +40,7 @@ public class ProposeMessage extends Message {
      * @throws JSONException
      */
     public static ProposeMessage messageDecipher(JSONObject data) throws JSONException {
-        return new ProposeMessage(data.getInt("type"), (Number) data.get("sequence_no"), (Number) data.get("node"),
+        return new ProposeMessage((Number) data.get("sequence_no"), (Number) data.get("node"),
                 (Number) data.get("leader"), (Number) data.get("proposal"), (ArrayList) data.get("value_store"));
     }
 

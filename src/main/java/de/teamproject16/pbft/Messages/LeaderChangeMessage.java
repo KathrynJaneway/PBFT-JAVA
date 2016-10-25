@@ -1,6 +1,7 @@
 package de.teamproject16.pbft.Messages;
 
 import org.json.JSONObject;
+import static de.teamproject16.pbft.Messages.Types.LEADER_CHANGE;
 
 /**
  * Created by IngridBoldt on 04.10.16.
@@ -11,8 +12,8 @@ public class LeaderChangeMessage extends Message {
     Number leader;
     Number P;
 
-    public LeaderChangeMessage(int type, Number sequence_no, Number node_num, Number leader, Number P) {
-        super(type, sequence_no);
+    public LeaderChangeMessage(Number sequence_no, Number node_num, Number leader, Number P) {
+        super(LEADER_CHANGE, sequence_no);
         this.node_num = node_num;
         this.leader = leader;
         this.P = P;
