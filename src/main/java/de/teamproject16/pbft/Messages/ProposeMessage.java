@@ -24,7 +24,7 @@ public class ProposeMessage extends Message {
      * @param proposal
      * @param value_store values from all nodes in the network
      */
-    public ProposeMessage(Number type, Number sequence_no, Number node, Number leader, Number proposal, ArrayList value_store) {
+    public ProposeMessage(int type, Number sequence_no, Number node, Number leader, Number proposal, ArrayList value_store) {
         super(type, sequence_no);
         this.node = node;
         this.leader = leader;
@@ -39,7 +39,7 @@ public class ProposeMessage extends Message {
      * @throws JSONException
      */
     public static ProposeMessage messageDecipher(JSONObject data) throws JSONException {
-        return new ProposeMessage((Number) data.get("type"), (Number) data.get("sequence_no"), (Number) data.get("node"),
+        return new ProposeMessage(data.getInt("type"), (Number) data.get("sequence_no"), (Number) data.get("node"),
                 (Number) data.get("leader"), (Number) data.get("proposal"), (ArrayList) data.get("value_store"));
     }
 

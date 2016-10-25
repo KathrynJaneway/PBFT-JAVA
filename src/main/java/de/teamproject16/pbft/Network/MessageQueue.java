@@ -8,8 +8,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by IngridBoldt on 19.10.16.
  */
 public class MessageQueue {
-    static LinkedBlockingQueue leaderChangeM = new LinkedBlockingQueue<>(); // Maximumgröße von Int + initial Elemente
-    static LinkedBlockingQueue initM = new LinkedBlockingQueue(); //Maximumgröße von Int
+    static LinkedBlockingQueue leaderChangeM = new LinkedBlockingQueue();
+    static LinkedBlockingQueue initM = new LinkedBlockingQueue();
     static LinkedBlockingQueue prevoteM = new LinkedBlockingQueue();
     static LinkedBlockingQueue proposeM = new LinkedBlockingQueue();
     static LinkedBlockingQueue voteM = new LinkedBlockingQueue();

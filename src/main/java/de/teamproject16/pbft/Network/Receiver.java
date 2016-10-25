@@ -121,7 +121,7 @@ public class Receiver extends ObjectWithLogger {
         }
     }
 
-    private void addMessage(String json) {
+    public void addMessage(String json) {
         try {
             JSONObject data = new JSONObject(json);
             MessageQueue.messageQueue(Message.messageConvert(data));
@@ -129,12 +129,5 @@ public class Receiver extends ObjectWithLogger {
             System.out.println("Convert the String to JSONObject failed.");
             e.printStackTrace();
         }
-        //Listen für die einzelnen Messages
-        //Threadsave  in python classe message queue
-        //einer lock zugriff und zählen
-
-        //TODO: string to json
-        //TODO: json to Message instance
-        //TODO: put message in the fitting list
     }
 }

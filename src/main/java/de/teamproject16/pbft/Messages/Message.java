@@ -8,14 +8,7 @@ import org.json.JSONObject;
  */
 public class Message {
 
-    /**
-     * Enum class for the messagetyps.
-     */
-    public enum messageType {
-        INIT, LEADER_CHANGE, PROPOSE, PREVOTE, VOTE
-    }
-
-    static Number type;
+    int type;
     Number sequence_no;
 
     /**
@@ -23,7 +16,7 @@ public class Message {
      * @param type messagetype
      * @param sequence_no of tries
      */
-    public Message(Number type, Number sequence_no){
+    public Message(int type, Number sequence_no){
         this.type = type;
         this.sequence_no = sequence_no;
     }
@@ -60,27 +53,30 @@ public class Message {
      * @throws JSONException
      */
     public static Message messageConvert(JSONObject data) throws JSONException {
+        int type = 0;
         try {
-            type = Integer.parseInt(data.getString("type"));
+            type = data.getInt("type");
+            System.out.println(type);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if ((Number) messageType.valueOf("INIT").ordinal() == type ){
+        if (MessageType.INIT == type){
             return InitMessage.messageDecipher(data);
         }
-        if ((Number) messageType.valueOf("LEADER_CHANGE").ordinal() == type){
+
+        if (MessageType.LEADER_CHANGE == type){
             return LeaderChangeMessage.messageDecipher(data);
         }
-        if ((Number) messageType.valueOf("PROPOSE").ordinal() == type){
+        if (MessageType.PROPOSE == type){
             return ProposeMessage.messageDecipher(data);
         }
-        if ((Number) messageType.valueOf("PREVOTE").ordinal() == type){
+        if (MessageType.PREVOTE == type){
             return PrevoteMessage.messageDecipher(data);
         }
-        if ((Number) messageType.valueOf("VOTE").ordinal() == type){
+        if (MessageType.VOTE == type){
             return VoteMessage.messageDecipher(data);
         }
-        return new Message((Number) data.get("type"), (Number) data.get("sequence_no"));
+        return new Message(data.getInt("type"), (Number) data.get("sequence_no"));
     }
 
 }

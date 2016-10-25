@@ -11,7 +11,7 @@ public class LeaderChangeMessage extends Message {
     Number leader;
     Number P;
 
-    public LeaderChangeMessage(Number type, Number sequence_no, Number node_num, Number leader, Number P) {
+    public LeaderChangeMessage(int type, Number sequence_no, Number node_num, Number leader, Number P) {
         super(type, sequence_no);
         this.node_num = node_num;
         this.leader = leader;
