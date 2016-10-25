@@ -61,5 +61,6 @@
     <orderEntry type="library" name="Maven: org.bouncycastle:bcpkix-jdk15on:1.52" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.52" level="project" />
     <orderEntry type="library" name="Maven: com.github.luckydonald:luckydonald-java-utils:master-be880e0d0d-1" level="project" />
+    <orderEntry type="library" name="Maven: javax.cache:cache-api:0.3" level="project" />
   </component>
 </module>
