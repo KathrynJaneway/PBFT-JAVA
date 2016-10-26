@@ -135,11 +135,12 @@
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.3.0</version>
-                <!-- handled by travis env.
                 <configuration>
+                    <!-- handled by travis env vars.
                     <repoToken>yourcoverallsprojectrepositorytoken</repoToken>
+                    -->
+                    <sourceEncoding>utf-8</sourceEncoding>
                 </configuration>
-                -->
             </plugin>
         </plugins>
     </build>
