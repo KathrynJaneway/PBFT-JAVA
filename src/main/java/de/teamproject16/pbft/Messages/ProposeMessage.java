@@ -40,8 +40,14 @@ public class ProposeMessage extends Message {
      * @throws JSONException
      */
     public static ProposeMessage messageDecipher(JSONObject data) throws JSONException {
-        return new ProposeMessage((Number) data.get("sequence_no"), (Number) data.get("node"),
-                (Number) data.get("leader"), (Number) data.get("proposal"), (ArrayList) data.get("value_store"));
+        int len = data.getJSONArray("value_store").length();
+        ArrayList<Number> tmp_value_store = new ArrayList<>(len);
+        for(int i=0;i < len;i++){
+            tmp_value_store.add(data.getJSONArray("value_store").getDouble(i));
+        }
+        return new ProposeMessage(
+                (Number) data.get("sequence_no"), (Number) data.get("node"), (Number) data.get("leader"),
+                (Number) data.get("proposal"), tmp_value_store);
     }
 
     /**
