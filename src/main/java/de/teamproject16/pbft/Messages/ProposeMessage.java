@@ -1,9 +1,11 @@
 package de.teamproject16.pbft.Messages;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IngridBoldt on 29.09.16.
@@ -13,7 +15,7 @@ public class ProposeMessage extends Message {
     Number node;
     Number leader;
     Number proposal;
-    ArrayList value_store;
+    List value_store;
 
     /**
      * Propose message
@@ -24,7 +26,7 @@ public class ProposeMessage extends Message {
      * @param proposal
      * @param value_store values from all nodes in the network
      */
-    public ProposeMessage(int type, Number sequence_no, Number node, Number leader, Number proposal, ArrayList value_store) {
+    public ProposeMessage(int type, Number sequence_no, Number node, Number leader, Number proposal, List value_store) {
         super(type, sequence_no);
         this.node = node;
         this.leader = leader;
@@ -39,8 +41,9 @@ public class ProposeMessage extends Message {
      * @throws JSONException
      */
     public static ProposeMessage messageDecipher(JSONObject data) throws JSONException {
+        List<Integer> value_store = new Gson().fromJson((String) data.get("value_store"), new TypeToken<List<String>>() {}.getType());
         return new ProposeMessage(data.getInt("type"), (Number) data.get("sequence_no"), (Number) data.get("node"),
-                (Number) data.get("leader"), (Number) data.get("proposal"), (ArrayList) data.get("value_store"));
+                (Number) data.get("leader"), (Number) data.get("proposal"), value_store);
     }
 
     /**
