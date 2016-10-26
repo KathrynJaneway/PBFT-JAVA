@@ -2,6 +2,7 @@ package de.teamproject16.pbft.Messages;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import static de.teamproject16.pbft.Messages.Types.PREVOTE;
 
 /**
  * Created by IngridBoldt on 29.09.16.
@@ -14,14 +15,13 @@ public class PrevoteMessage extends Message {
 
     /**
      * Prevote message
-     * @param type messagetype
      * @param sequence_no of tries
      * @param node the id of the sender
      * @param leader
      * @param value from the node
      */
-    public PrevoteMessage(int type, Number sequence_no, Number node, Number leader, Number value) {
-        super(type, sequence_no);
+    public PrevoteMessage(Number sequence_no, Number node, Number leader, Number value) {
+        super(PREVOTE, sequence_no);
         this.node = node;
         this.leader = leader;
         this.value = value;
@@ -34,7 +34,7 @@ public class PrevoteMessage extends Message {
      * @throws JSONException
      */
     public static PrevoteMessage messageDecipher(JSONObject data) throws JSONException {
-        return new PrevoteMessage(data.getInt("type"), (Number) data.get("sequence_no"), (Number) data.get("node"),
+        return new PrevoteMessage((Number) data.get("sequence_no"), (Number) data.get("node"),
                 (Number) data.get("leader"), (Number) data.get("value"));
     }
 

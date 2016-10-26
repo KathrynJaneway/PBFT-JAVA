@@ -6,6 +6,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.ArrayList;
+import static de.teamproject16.pbft.Messages.Types.PROPOSE;
+
 
 /**
  * Created by IngridBoldt on 29.09.16.
@@ -19,15 +22,14 @@ public class ProposeMessage extends Message {
 
     /**
      * Propose message
-     * @param type messagetype
      * @param sequence_no of tries
      * @param node the id of the sender
      * @param leader
      * @param proposal
      * @param value_store values from all nodes in the network
      */
-    public ProposeMessage(int type, Number sequence_no, Number node, Number leader, Number proposal, List value_store) {
-        super(type, sequence_no);
+    public ProposeMessage(Number sequence_no, Number node, Number leader, Number proposal, List value_store) {
+        super(PROPOSE, sequence_no);
         this.node = node;
         this.leader = leader;
         this.proposal = proposal;
