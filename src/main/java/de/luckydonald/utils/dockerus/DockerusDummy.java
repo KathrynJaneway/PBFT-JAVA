@@ -87,12 +87,12 @@ public class DockerusDummy extends Dockerus{
     }
 
     @Override
-    String getNumber() throws DockerException, InterruptedException {
+    int getNumber() throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    String getNumber(Container container) throws DockerException, InterruptedException {
+    int getNumber(Container container) throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 

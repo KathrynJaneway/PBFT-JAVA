@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.ArrayList;
+
 import static de.teamproject16.pbft.Messages.Types.PROPOSE;
 
 
@@ -44,7 +44,7 @@ public class ProposeMessage extends Message {
      */
     public static ProposeMessage messageDecipher(JSONObject data) throws JSONException {
         List<Integer> value_store = new Gson().fromJson((String) data.get("value_store"), new TypeToken<List<String>>() {}.getType());
-        return new ProposeMessage(data.getInt("type"), (Number) data.get("sequence_no"), (Number) data.get("node"),
+        return new ProposeMessage((Number) data.get("sequence_no"), (Number) data.get("node"),
                 (Number) data.get("leader"), (Number) data.get("proposal"), value_store);
     }
 

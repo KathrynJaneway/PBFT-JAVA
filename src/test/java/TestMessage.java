@@ -1,7 +1,5 @@
 import com.google.gson.Gson;
-import de.teamproject16.pbft.Messages.InitMessage;
-import de.teamproject16.pbft.Messages.Message;
-import de.teamproject16.pbft.Messages.ProposeMessage;
+import de.teamproject16.pbft.Messages.*;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -20,7 +18,7 @@ public class TestMessage {
         testInit.put("type", 1);
         testInit.put("sequence_no", 3);
         testInit.put("node", 1);
-        testInit.put("value", 5.0);
+        testInit.put("value", 5.3);
         Object te = Message.messageConvert(testInit);
         assertThat("InitMessage", te, instanceOf(InitMessage.class));
         System.out.println(te.toString());
@@ -46,6 +44,27 @@ public class TestMessage {
 
     @Test
     public void testPrevoteMessage() throws Exception{
+        JSONObject testPrev = new JSONObject();
+        testPrev.put("type", 4);
+        testPrev.put("sequence_no", 3);
+        testPrev.put("node", 1);
+        testPrev.put("leader", 2);
+        testPrev.put("value", 5.3);
+        Object te = Message.messageConvert(testPrev);
+        assertThat("PrevoteMessage", te, instanceOf(PrevoteMessage.class));
+        System.out.println(te.toString());
+    }
 
+    @Test
+    public void testVoteMessage() throws Exception{
+        JSONObject testVote = new JSONObject();
+        testVote.put("type", 5);
+        testVote.put("sequence_no", 3);
+        testVote.put("node", 1);
+        testVote.put("leader", 2);
+        testVote.put("value", 5.3);
+        Object te = Message.messageConvert(testVote);
+        assertThat("VoteMessage", te, instanceOf(VoteMessage.class));
+        System.out.println(te.toString());
     }
 }
