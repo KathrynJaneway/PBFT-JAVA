@@ -4,34 +4,38 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.channels.ServerSocketChannel;
 
+
 /**
  * @author luckydonald
  * @since 26.10.2016
  **/
 public class ServerSocketMockup extends ServerSocket {
-    public ServerSocketMockup() throws IOException {
+    SocketMockup socket = null;
+    public ServerSocketMockup(SocketMockup s) throws IOException {
+        System.out.println("Mock ServerSocket");
+        this.socket = s;
     }
 
     public ServerSocketMockup(int port) throws IOException {
-        super(port);
+        throw new UnsupportedOperationException("Not implemented."); // super(port);
     }
 
     public ServerSocketMockup(int port, int backlog) throws IOException {
-        super(port, backlog);
+        throw new UnsupportedOperationException("Not implemented."); // super(port, backlog);
     }
 
     public ServerSocketMockup(int port, int backlog, InetAddress bindAddr) throws IOException {
-        super(port, backlog, bindAddr);
+        throw new UnsupportedOperationException("Not implemented."); // super(port, backlog, bindAddr);
     }
 
     @Override
     public void bind(SocketAddress endpoint) throws IOException {
-        super.bind(endpoint);
+        throw new UnsupportedOperationException("Not implemented."); // super.bind(endpoint);
     }
 
     @Override
     public void bind(SocketAddress endpoint, int backlog) throws IOException {
-        super.bind(endpoint, backlog);
+        throw new UnsupportedOperationException("Not implemented."); // super.bind(endpoint, backlog);
     }
 
     @Override
@@ -51,7 +55,8 @@ public class ServerSocketMockup extends ServerSocket {
 
     @Override
     public Socket accept() throws IOException {
-        throw new UnsupportedOperationException("Not implemented."); // return super.accept();
+        System.out.println("accept()");
+        return new SocketMockup();
     }
 
     @Override
