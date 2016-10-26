@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static de.teamproject16.pbft.Messages.Types.*;
 
 /**
  * Created by IngridBoldt on 24.10.16.
@@ -15,7 +16,7 @@ public class TestMessage {
     @Test
     public void testInitMessageConvert() throws Exception{
         JSONObject testInit = new JSONObject();
-        testInit.put("type", 1);
+        testInit.put("type", INIT);
         testInit.put("sequence_no", 3);
         testInit.put("node", 1);
         testInit.put("value", 5.3);
@@ -27,7 +28,7 @@ public class TestMessage {
     @Test
     public void testProposeMessageConvert() throws Exception{
         JSONObject testPropo = new JSONObject();
-        testPropo.put("type", 3);
+        testPropo.put("type", PROPOSE);
         testPropo.put("sequence_no", 3);
         testPropo.put("node", 1);
         testPropo.put("leader", 2);
@@ -45,7 +46,7 @@ public class TestMessage {
     @Test
     public void testPrevoteMessage() throws Exception{
         JSONObject testPrev = new JSONObject();
-        testPrev.put("type", 4);
+        testPrev.put("type", PREVOTE);
         testPrev.put("sequence_no", 3);
         testPrev.put("node", 1);
         testPrev.put("leader", 2);
@@ -58,7 +59,7 @@ public class TestMessage {
     @Test
     public void testVoteMessage() throws Exception{
         JSONObject testVote = new JSONObject();
-        testVote.put("type", 5);
+        testVote.put("type", VOTE);
         testVote.put("sequence_no", 3);
         testVote.put("node", 1);
         testVote.put("leader", 2);
