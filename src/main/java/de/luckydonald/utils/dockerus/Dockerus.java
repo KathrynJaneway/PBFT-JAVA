@@ -80,16 +80,16 @@ public class Dockerus {
     }
 
 
-    String getNumber() throws DockerException, InterruptedException {
+    public int getNumber() throws DockerException, InterruptedException {
         return this.getNumber(this.me());
     }
-    String getNumber(Container container) throws DockerException, InterruptedException {
+    public int getNumber(Container container) throws DockerException, InterruptedException {
         //TODO: int
-        return container.labels().get(this.LABEL_COMPOSE_CONTAINER_NUMBER);
+        return Integer.parseInt(container.labels().get(this.LABEL_COMPOSE_CONTAINER_NUMBER));
     }
 
 
-    List<Container> getContainers(boolean excludeSelf) throws DockerException, InterruptedException {
+    public List<Container> getContainers(boolean excludeSelf) throws DockerException, InterruptedException {
         return this.getCLI().listContainers(
                 DockerClient.ListContainersParam.withLabel(this.LABEL_COMPOSE_PROJECT, this.getProject()),
                 DockerClient.ListContainersParam.withLabel(this.LABEL_COMPOSE_SERVICE, this.getService())
