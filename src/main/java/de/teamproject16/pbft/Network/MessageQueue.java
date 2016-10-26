@@ -1,18 +1,17 @@
 package de.teamproject16.pbft.Network;
 
+import de.teamproject16.pbft.CancelableLinkedBlockingQueue;
 import de.teamproject16.pbft.Messages.*;
-
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by IngridBoldt on 19.10.16.
  */
 public class MessageQueue {
-    static LinkedBlockingQueue leaderChangeM = new LinkedBlockingQueue();
-    static LinkedBlockingQueue initM = new LinkedBlockingQueue();
-    static LinkedBlockingQueue prevoteM = new LinkedBlockingQueue();
-    static LinkedBlockingQueue proposeM = new LinkedBlockingQueue();
-    static LinkedBlockingQueue voteM = new LinkedBlockingQueue();
+    static CancelableLinkedBlockingQueue leaderChangeM = new CancelableLinkedBlockingQueue();
+    static CancelableLinkedBlockingQueue initM = new CancelableLinkedBlockingQueue();
+    static CancelableLinkedBlockingQueue prevoteM = new CancelableLinkedBlockingQueue();
+    static CancelableLinkedBlockingQueue proposeM = new CancelableLinkedBlockingQueue();
+    static CancelableLinkedBlockingQueue voteM = new CancelableLinkedBlockingQueue();
 
     public static void messageQueue(Message message){
         try {
@@ -34,6 +33,14 @@ public class MessageQueue {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void cancelAll() {
+        initM.cancel();
+        leaderChangeM.cancel();
+        prevoteM.cancel();
+        proposeM.cancel();
+        voteM.cancel();
     }
 }
 
