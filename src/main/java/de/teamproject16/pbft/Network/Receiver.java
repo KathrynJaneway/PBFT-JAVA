@@ -25,10 +25,11 @@ import java.nio.charset.Charset;
  **/
 public class Receiver extends ObjectWithLogger {
     private static String ANSWER_SYNTAX = "ANSWER ";
-    private static byte LINE_BREAK = '\n';
 
     public void receiver() throws IOException {
-        ServerSocket server = new ServerSocket(4458); // throws IOException
+        this.receiver(this.newServerSocket());
+    }
+    public void receiver(ServerSocket server) throws IOException {
         while (true) {  // For each connection do  // TODO: self.do_quit or similar
             Socket socket = server.accept();  // throws IOException
             try {
@@ -119,6 +120,10 @@ public class Receiver extends ObjectWithLogger {
                 }
             }
         }
+    }
+
+    ServerSocket newServerSocket() throws IOException {
+        return new ServerSocket(4458); // throws IOException
     }
 
     public void addMessage(String json) {
