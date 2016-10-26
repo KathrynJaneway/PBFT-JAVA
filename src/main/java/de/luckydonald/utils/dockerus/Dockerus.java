@@ -41,53 +41,49 @@ public class Dockerus {
     }
 
 
-    DockerClient getCLI() {
+    public DockerClient getCLI() {
         return docker;
     }
 
-    String getEnvHostname() {
+    public String getEnvHostname() {
         return System.getenv("HOSTNAME");
     }
 
-    Container me() throws DockerException, InterruptedException {
+    public Container me() throws DockerException, InterruptedException {
         return this.getCLI().listContainers().stream().filter(this::filterIsIdEqualHostname).limit(1).collect(Collectors.toList()).get(0);
     }
 
-    String getId() throws DockerException, InterruptedException {
-        //TODO int
-        return this.me().id();
+    public int getId() throws DockerException, InterruptedException {
+        return Integer.parseInt(this.me().id());
     }
 
-    String getService() throws DockerException, InterruptedException {
+    public String getService() throws DockerException, InterruptedException {
         return this.getService(this.me());
     }
-    String getService(Container container) throws DockerException, InterruptedException {
+    public String getService(Container container) throws DockerException, InterruptedException {
         return container.labels().get(this.LABEL_COMPOSE_SERVICE);
     }
 
-    String getName() throws DockerException, InterruptedException {
+    public String getName() throws DockerException, InterruptedException {
         return this.getService();
     }
-    String getName(Container container) throws DockerException, InterruptedException {
+    public String getName(Container container) throws DockerException, InterruptedException {
         return this.getService(container);
     }
 
-    String getProject() throws DockerException, InterruptedException {
+    public String getProject() throws DockerException, InterruptedException {
         return this.getProject(this.me());
     }
-    String getProject(Container container) throws DockerException, InterruptedException {
+    public String getProject(Container container) throws DockerException, InterruptedException {
         return container.labels().get(this.LABEL_COMPOSE_PROJECT);
     }
-
 
     public int getNumber() throws DockerException, InterruptedException {
         return this.getNumber(this.me());
     }
     public int getNumber(Container container) throws DockerException, InterruptedException {
-        //TODO: int
         return Integer.parseInt(container.labels().get(this.LABEL_COMPOSE_CONTAINER_NUMBER));
     }
-
 
     public List<Container> getContainers(boolean excludeSelf) throws DockerException, InterruptedException {
         return this.getCLI().listContainers(

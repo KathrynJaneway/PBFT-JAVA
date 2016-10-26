@@ -37,67 +37,67 @@ public class DockerusDummy extends Dockerus{
     }
 
     @Override
-    DockerClient getCLI() {
+    public DockerClient getCLI() {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    String getEnvHostname() {
+    public String getEnvHostname() {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    Container me() throws DockerException, InterruptedException {
+    public Container me() throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    String getId() throws DockerException, InterruptedException {
+    public int getId() throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    String getService() throws DockerException, InterruptedException {
+    public String getService() throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    String getService(Container container) throws DockerException, InterruptedException {
+    public String getService(Container container) throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    String getName() throws DockerException, InterruptedException {
+    public String getName() throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    String getName(Container container) throws DockerException, InterruptedException {
+    public String getName(Container container) throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    String getProject() throws DockerException, InterruptedException {
+    public String getProject() throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    String getProject(Container container) throws DockerException, InterruptedException {
+    public String getProject(Container container) throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    int getNumber() throws DockerException, InterruptedException {
+    public int getNumber() throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    int getNumber(Container container) throws DockerException, InterruptedException {
+    public int getNumber(Container container) throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 
     @Override
-    List<Container> getContainers(boolean excludeSelf) throws DockerException, InterruptedException {
+    public List<Container> getContainers(boolean excludeSelf) throws DockerException, InterruptedException {
         throw new NotImplementedException("Project probably not loaded in docker-compose...");
     }
 }
