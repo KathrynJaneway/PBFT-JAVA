@@ -7,11 +7,11 @@ import de.teamproject16.pbft.Messages.*;
  * Created by IngridBoldt on 19.10.16.
  */
 public class MessageQueue {
-    static CancelableLinkedBlockingQueue leaderChangeM = new CancelableLinkedBlockingQueue();
-    static CancelableLinkedBlockingQueue initM = new CancelableLinkedBlockingQueue();
-    static CancelableLinkedBlockingQueue prevoteM = new CancelableLinkedBlockingQueue();
-    static CancelableLinkedBlockingQueue proposeM = new CancelableLinkedBlockingQueue();
-    static CancelableLinkedBlockingQueue voteM = new CancelableLinkedBlockingQueue();
+    public static CancelableLinkedBlockingQueue leaderChangeM = new CancelableLinkedBlockingQueue();
+    public static CancelableLinkedBlockingQueue initM = new CancelableLinkedBlockingQueue();
+    public static CancelableLinkedBlockingQueue prevoteM = new CancelableLinkedBlockingQueue();
+    public static CancelableLinkedBlockingQueue proposeM = new CancelableLinkedBlockingQueue();
+    public static CancelableLinkedBlockingQueue voteM = new CancelableLinkedBlockingQueue();
 
     public static void messageQueue(Message message){
         try {

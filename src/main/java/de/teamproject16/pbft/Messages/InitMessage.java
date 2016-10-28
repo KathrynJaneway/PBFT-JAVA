@@ -8,8 +8,8 @@ import static de.teamproject16.pbft.Messages.Types.INIT;
  * Created by IngridBoldt on 29.09.16.
  */
 public class InitMessage extends Message {
-    Number value;
-    Number node;
+    public float value;
+    public Number node;
 
     /**
      *InitMessage
@@ -17,7 +17,7 @@ public class InitMessage extends Message {
      * @param node the id of the sender
      * @param value the value of the sensor from the node
      */
-    public InitMessage(Number sequence_no, Number node, Number value) {
+    public InitMessage(Number sequence_no, Number node, float value) {
         super(INIT, sequence_no);
         this.node = node;
         this.value = value;
@@ -31,7 +31,7 @@ public class InitMessage extends Message {
      */
     public static InitMessage messageDecipher(JSONObject data) throws JSONException {
         return new InitMessage((Number) data.get("sequence_no"), (Number) data.get("node"),
-                (Number) data.get("value"));
+                (float) data.getDouble("value"));
     }
 
     /**

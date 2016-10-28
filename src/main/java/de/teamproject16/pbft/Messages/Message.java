@@ -9,7 +9,7 @@ import org.json.JSONObject;
 public class Message {
 
     int type;
-    Number sequence_no;
+    public Number sequence_no;
 
     /**
      * Create the basic type of message.

@@ -1,13 +1,12 @@
 import com.google.gson.Gson;
+import de.teamproject16.pbft.CancelableLinkedBlockingQueue;
 import de.teamproject16.pbft.Messages.*;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
+import static de.teamproject16.pbft.Messages.Types.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static de.teamproject16.pbft.Messages.Types.*;
 
 /**
  * Created by IngridBoldt on 24.10.16.
@@ -33,9 +32,8 @@ public class TestMessage {
         testPropo.put("node", 1);
         testPropo.put("leader", 2);
         testPropo.put("proposal", 3.5);
-        ArrayList value_store = new ArrayList();
-        value_store.add(2.4);
-        value_store.add(3.6);
+        CancelableLinkedBlockingQueue value_store = new CancelableLinkedBlockingQueue();
+        value_store.add(new InitMessage(((int) System.currentTimeMillis()/ 1000), 2, (float) 5.3));
         String gson = new Gson().toJson(value_store);
         testPropo.put("value_store", gson);
         Object te = Message.messageConvert(testPropo);
