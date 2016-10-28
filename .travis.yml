@@ -15,3 +15,12 @@ cache:
 after_success:
 - mvn test jacoco:report coveralls:report -DrepoToken=$COVERALLS_TOKEN
 
+notifications:
+  # https://docs.travis-ci.com/user/notifications#Notifications
+  webhooks:
+    urls:
+      - "https://bot.proxy.bronies.link/travis/webhook/YVMHr0uSVaigsObgRT7ftHGM48tQkBnZgfCnDdZkHFg"
+    on_success: always  # default: always
+    on_failure: always  # default: always
+    on_start: always    # default: never
+    # [always|never|change]  # change means to notify when the build status changes.
