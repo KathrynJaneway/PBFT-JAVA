@@ -2,6 +2,7 @@ package de.teamproject16.pbft.Messages;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import de.teamproject16.pbft.CancelableLinkedBlockingQueue;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,7 +19,7 @@ public class ProposeMessage extends Message {
     Number node;
     Number leader;
     Number proposal;
-    List value_store;
+    CancelableLinkedBlockingQueue value_store;
 
     /**
      * Propose message
@@ -28,7 +29,7 @@ public class ProposeMessage extends Message {
      * @param proposal
      * @param value_store values from all nodes in the network
      */
-    public ProposeMessage(Number sequence_no, Number node, Number leader, Number proposal, List value_store) {
+    public ProposeMessage(Number sequence_no, Number node, Number leader, Number proposal, CancelableLinkedBlockingQueue value_store) {
         super(PROPOSE, sequence_no);
         this.node = node;
         this.leader = leader;
@@ -43,9 +44,9 @@ public class ProposeMessage extends Message {
      * @throws JSONException
      */
     public static ProposeMessage messageDecipher(JSONObject data) throws JSONException {
-        List<Integer> value_store = new Gson().fromJson((String) data.get("value_store"), new TypeToken<List<String>>() {}.getType());
+        CancelableLinkedBlockingQueue<InitMessage> value_store = new Gson().fromJson((String) data.get("value_store"), new TypeToken<List<String>>() {}.getType());
         return new ProposeMessage((Number) data.get("sequence_no"), (Number) data.get("node"),
-                (Number) data.get("leader"), (Number) data.get("proposal"), value_store);
+                (Number) data.get("leader"), (Number) data.get("proposal"), (CancelableLinkedBlockingQueue) value_store);
     }
 
     /**
