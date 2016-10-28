@@ -78,5 +78,4 @@ public class Message {
         }
         return new Message(data.getInt("type"), (Number) data.get("sequence_no"));
     }
-
 }

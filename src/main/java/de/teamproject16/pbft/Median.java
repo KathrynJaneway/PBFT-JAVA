@@ -12,20 +12,19 @@ import java.util.List;
  */
 public class Median {
 
-    public static Object calculateMedian(CancelableLinkedBlockingQueue initM, int l) throws InterruptedException {
-        List<Float> initStore = new LinkedList<>();
-        Number seqInit = (((Message) initM.peek()).sequence_no);
-        for (int i = 0; i<=l; i++){
-            if ((((Message) initM.peek()).sequence_no) == seqInit) {
-                initStore.add((Float) ((InitMessage) initM.take()).value);
-            }
+    /** calculates the median of a given initStore list. This list has to only contain the current sequence number. **/
+    public static float calculateMedian(List<InitMessage> initStore) throws InterruptedException {
+        //TODO: Start Locking
+        List<Float> floatStore = new LinkedList<>();
+        for (InitMessage msg : initStore){
+            floatStore.add(msg.value);
         }
-        Collections.sort(initStore);
-        int calculate = initStore.size()/2;
-        Object median = initStore.get(calculate);
-        return median;
+        //TODO: End lock
+        Collections.sort(floatStore);
+        int calculate = floatStore.size()/2;
+        return floatStore.get(calculate);
     }
-/*
+    /*
     public static void simulate(int count){
         for(int i = 0; i<count; i++){
             double v = Math.random()*10;

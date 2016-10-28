@@ -2,14 +2,13 @@ package de.teamproject16.pbft;
 
 import com.spotify.docker.client.DockerCertificateException;
 import com.spotify.docker.client.DockerException;
+import de.luckydonald.utils.dockerus.DockerusAuto;
 import de.teamproject16.pbft.Messages.InitMessage;
 import de.teamproject16.pbft.Messages.ProposeMessage;
-import de.teamproject16.pbft.Network.MessageQueue;
 import de.teamproject16.pbft.Network.Sender;
 
 import java.io.UnsupportedEncodingException;
-
-import static de.luckydonald.utils.dockerus.DockerusAuto.getInstance;
+import java.util.ArrayList;
 
 /**
  * Created by IngridBoldt on 26.10.16.
@@ -18,6 +17,8 @@ public class NormalCase {
     public int sequencelength = 1000;
 
     int leader = 1;
+
+    ArrayList initStore = null;
 
     /**
      * The row 15 to 27 from the algorithm.
@@ -28,17 +29,32 @@ public class NormalCase {
      */
     public void normalFunction() throws DockerException, InterruptedException, UnsupportedEncodingException, DockerCertificateException {
         Sender sender = new Sender();
-        sender.sendMessage(new InitMessage(((int) System.currentTimeMillis()/sequencelength), getInstance().getNumber(), ToDO.getSensorValue()));//UNixtimestampe
+        initStore = new ArrayList();
 
-        if(this.leader == getInstance().getNumber()){
-            if(MessageQueue.initM.size() >= getInstance().getHostnames(true).size() - (1/3)){
-                CancelableLinkedBlockingQueue initStore = MessageQueue.initM;
-                float median = (float) Median.calculateMedian(initStore, initStore.size());
-                sender.sendMessage(new ProposeMessage(((int) System.currentTimeMillis()/sequencelength), getInstance().getNumber(),
-                        getInstance().getNumber(), median, initStore));
+        sender.sendMessage(new InitMessage(((int) System.currentTimeMillis()/sequencelength), DockerusAuto.getInstance().getNumber(), ToDO.getSensorValue()));  //UNixtimestampe
+
+        if(this.leader == DockerusAuto.getInstance().getNumber()){
+            if(this.initStore.size() >= DockerusAuto.getInstance().getHostnames(true).size() - (1/3)){  //TODO: (int) 1/3 == 0
+                float median = (float) Median.calculateMedian(this.initStore);
+                sender.sendMessage(
+                        new ProposeMessage(
+                                (int) System.currentTimeMillis()/sequencelength,
+                                DockerusAuto.getInstance().getNumber(),
+                                DockerusAuto.getInstance().getNumber(),
+                                median,
+                                initStore
+                        )
+                );
             }
             //notify soll auf timeout oder genügend nachrichten warten
 
+        }
+    }
+
+    public void cleanUp() {
+        if(this.initStore != null) {
+            this.initStore.clear();
+            this.initStore = null;
         }
     }
 }
