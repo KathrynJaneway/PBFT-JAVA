@@ -29,17 +29,15 @@ public class TestMessage {
 
     @Test
     public void testProposeMessageConvert() throws Exception{
-        JSONObject testPropo = new JSONObject();
-        testPropo.put("type", PROPOSE);
-        testPropo.put("sequence_no", 3);
-        testPropo.put("node", 1);
-        testPropo.put("leader", 2);
-        testPropo.put("proposal", 3.5);
-        List<InitMessage> value_store = new ArrayList<InitMessage>();
-        value_store.add(new InitMessage(((int) System.currentTimeMillis()/ 1000), 2, (float) 5.3));
-        String gson = new Gson().toJson(value_store);
-        testPropo.put("value_store", gson);
-        Object te = Message.messageConvert(testPropo);
+        String json = "{\"type\": "+ PROPOSE + ", \"sequence_no\": 3, \"node\": 1, " +
+                "\"leader\": 2, \"proposal\": 3.5, \"value_store\": [" +
+                "{\"node\": 2, \"value\": 0.4, \"type\": 1, \"sequence_no\": 1}, " +
+                "{\"node\": 1, \"value\": 0.6, \"type\": 1, \"sequence_no\": 1}, " +
+                "{\"node\": 3, \"value\": 0.3, \"type\": 1, \"sequence_no\": 1}, " +
+                "{\"node\": 4, \"value\": 0.3, \"type\": 1, \"sequence_no\": 1}" +
+                "]}";
+        JSONObject json_obj = new JSONObject(json);
+        Object te = Message.messageConvert(json_obj);
         assertThat("ProposeMessage", te, instanceOf(ProposeMessage.class));
         System.out.println(te.toString());
     }
