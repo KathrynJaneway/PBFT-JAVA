@@ -45,13 +45,16 @@ public class ProposeMessage extends Message {
      * @throws JSONException
      */
     public static ProposeMessage messageDecipher(JSONObject data) throws JSONException {
-        List<InitMessage> value_store = new Gson().fromJson(
-                (String) data.get("value_store"),
-                new TypeToken<List<String>>() {}.getType()
-        );
+        int len = data.getJSONArray("value_store").length();
+        ArrayList<InitMessage> tmp_value_store = new ArrayList<>(len);
+
+        for(int i=0; i < len; i++) {
+            JSONObject obj = data.getJSONArray("value_store").getJSONObject(i);
+            tmp_value_store.add(InitMessage.messageDecipher(obj));
+        }
         return new ProposeMessage(
                 (Number) data.get("sequence_no"), (Number) data.get("node"), (Number) data.get("leader"),
-                (Number) data.get("proposal"), value_store
+                (Number) data.get("proposal"), tmp_value_store
         );
     }
 
